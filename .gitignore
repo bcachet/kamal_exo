@@ -1,0 +1,22 @@
+# Ignore everything
+*
+
+!.gitignore
+
+# Devcontainer setup
+!.devcontainer/
+!.devcontainer/*
+
+# Our application
+!Dockerfile
+!.dockerignore
+!server/
+!server/*
+
+# Deployment files
+!.kamal/
+!.kamal/*
+!.kamal/hooks/
+!.kamal/hooks/*
+!config/
+!config/*
