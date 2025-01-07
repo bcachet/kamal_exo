@@ -1,14 +1,23 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
-	"name": "our-cloud",
-	"build": {
-		"context": "../",
-		"target": "dev",
-        "dockerfile": "../Dockerfile"
-    },
+	"name": "kamal_exo",
 
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
+	// Configure tool-specific properties.
 	"remoteUser": "vscode",
+
+	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+			"installDockerBuildx": true,
+			"installDockerComposeSwitch": true,
+			"dockerDashComposeVersion": "v2"
+		}
+	},
+
 	"customizations": {
 		"vscode": {
 			"extensions": [

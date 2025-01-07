@@ -1,25 +1,15 @@
-FROM docker.io/library/debian:bookworm AS dev
-
-RUN useradd -ms /bin/bash vscode
-
-RUN apt update
-
-## Setup kamal
-RUN <<EOF
-apt install -y ruby-full build-essential
-gem install kamal
-EOF
+## Build stage from which venv will be created
+FROM docker.io/library/debian:bookworm AS build
 
 ## Setup Python
 RUN <<EOF
-apt install -y python3 python3-pip python3-venv
+apt-get update
+apt-get install -y --no-install-recommends \
+    python3=3.11.2-1+b1 \
+    python3-venv=3.11.2-1+b1 \
+    python3-pip=23.0.1+dfsg-1
 python3 -m venv /opt/venv
 EOF
-
-
-ENV PATH="/opt/venv/bin:$PATH"
-
-FROM dev AS build
 
 WORKDIR /workdir
 
@@ -29,20 +19,20 @@ RUN <<EOF
 /opt/venv/bin/pip install -r requirements.txt
 EOF
 
-COPY server .
-
-FROM docker.io/library/debian:bookworm-slim AS deploy
+## Final stage that will be used to run application
+FROM docker.io/library/debian:bookworm-slim AS final
 
 RUN <<EOF
-apt update
-apt install -y python3
+apt-get update
+apt-get install -y --no-install-recommends \
+    python3=3.11.2-1+b1
+rm -rf /var/lib/apt/lists/*
+useradd -ms /bin/bash launcher
 EOF
 
-RUN useradd -ms /bin/bash launcher
-
 WORKDIR /app
+COPY --chown=launcher server .
 COPY --from=build --chown=launcher /opt/venv /opt/venv
-COPY --from=build --chown=launcher /workdir .
 
 USER launcher
 ENV PATH="/opt/venv/bin:$PATH"
