@@ -11,22 +11,16 @@ apt-get install -y --no-install-recommends \
 gem install kamal
 EOF
 
-## Python environment
+## Golang environment
 RUN <<EOF
+apt-get update
 apt-get install -y --no-install-recommends \
-    python3=3.11.2-1+b1 \
-    python3-venv=3.11.2-1+b1 \
-    python3-pip=23.0.1+dfsg-1 \
-    black=23.1.0-1 \
-    flake8=5.0.4-4
-python3 -m venv /opt/venv
+    golang=2:1.19~1 \
+    gopls=1:0.5.0+ds-1 \
+    delve=1.20.2-1
 EOF
-COPY server/requirements.txt .
-RUN /opt/venv/bin/pip install -r requirements.txt
 
 ## Cleanup
 RUN rm -rf /var/lib/apt/lists/*
 
-## Ensure vscode user use Python from venv
 USER vscode
-ENV PATH="/opt/venv/bin:$PATH"

@@ -1,41 +1,32 @@
-## Build stage from which venv will be created
-FROM docker.io/library/debian:bookworm AS build
+# syntax=docker/dockerfile:1
 
-## Setup Python
-RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends \
-    python3=3.11.2-1+b1 \
-    python3-venv=3.11.2-1+b1 \
-    python3-pip=23.0.1+dfsg-1
-python3 -m venv /opt/venv
-EOF
-
-WORKDIR /workdir
-
-COPY server/requirements.txt .
-
-RUN <<EOF
-/opt/venv/bin/pip install -r requirements.txt
-EOF
-
-## Final stage that will be used to run application
-FROM docker.io/library/debian:bookworm-slim AS final
-
-RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends \
-    python3=3.11.2-1+b1
-rm -rf /var/lib/apt/lists/*
-useradd -ms /bin/bash launcher
-EOF
+## Build the application from source
+FROM golang:1.19 AS build-stage
 
 WORKDIR /app
-COPY --chown=launcher server .
-COPY --from=build --chown=launcher /opt/venv /opt/venv
 
-USER launcher
-ENV PATH="/opt/venv/bin:$PATH"
+COPY server/go.mod server/go.sum ./
+RUN go mod download
 
-ENTRYPOINT [ "/opt/venv/bin/python3" ]
-CMD ["/app/app.py"]
+COPY server/* ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o /http-server
+
+
+## Run the tests in the container
+FROM build-stage AS run-test-stage
+
+RUN go test -v ./...
+
+
+## Final stage that will be used to run application
+FROM gcr.io/distroless/base-debian12
+
+WORKDIR /
+
+COPY --from=build-stage /http-server /http-server
+
+EXPOSE 8080
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/http-server"]
