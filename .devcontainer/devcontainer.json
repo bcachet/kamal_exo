@@ -2,27 +2,23 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
 	"name": "kamal_exo",
-
 	"build": {
-		"dockerfile": "Dockerfile",
-		"context": ".."
+		"dockerfile": "Dockerfile"
 	},
+	"runArgs": [
+		"--network=host"
+	],
 	// Configure tool-specific properties.
 	"remoteUser": "vscode",
 
-	"features": {
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-			"installDockerBuildx": true,
-			"installDockerComposeSwitch": true,
-			"dockerDashComposeVersion": "v2"
-		}
-	},
-
+	"features": {"ghcr.io/devcontainers/features/docker-outside-of-docker": {}},
+	
 	"customizations": {
 		"vscode": {
 			"extensions": [
 				"ms-azuretools.vscode-docker",
-				"golang.Go"
+				"golang.Go",
+				"redhat.vscode-yaml"
 			]
 		}
 	}

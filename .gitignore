@@ -9,6 +9,7 @@
 
 # Our application
 !Dockerfile
+!docker-compose.yml
 !.dockerignore
 !server/
 !server/go.mod
