@@ -19,14 +19,18 @@ RUN go test -v ./...
 
 
 ## Final stage that will be used to run application
-FROM gcr.io/distroless/base-debian12
+FROM scratch
 
 WORKDIR /
+
+COPY <<EOF /etc/passwd
+nobody:x:65534:65534:nobody:/:
+EOF
 
 COPY --from=build-stage /http-server /http-server
 
 EXPOSE 8080
 
-USER nonroot:nonroot
+USER nobody
 
 ENTRYPOINT ["/http-server"]
