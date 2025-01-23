@@ -7,15 +7,6 @@
 !.devcontainer/
 !.devcontainer/*
 
-# Our application
-!Dockerfile
-!docker-compose.yml
-!.dockerignore
-!server/
-!server/go.mod
-!server/go.sum
-!server/*.go
-
 # Deployment files
 !.kamal/
 !.kamal/*

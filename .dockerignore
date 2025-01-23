@@ -1,6 +1,0 @@
-*
-
-!server/
-!server/go.mod
-!server/go.sum
-!server/*.go
