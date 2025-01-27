@@ -19,6 +19,10 @@ proxy:
   # host: 
   # Proxy connects to your container on port 80 by default.
   app_port: 5000
+  healthcheck:
+    interval: 1
+    path: /healthz
+    timeout: 5
 
 # Credentials for your image host.
 registry:
@@ -32,8 +36,8 @@ registry:
 # Configure builder setup.
 builder:
   arch: amd64
-  dockerfile: ../vote/Dockerfile
-  context: ../vote
+  dockerfile: ./vote/Dockerfile
+  context: ./vote
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
@@ -52,6 +56,11 @@ builder:
 # Use a different ssh user than root
 ssh:
   user: ubuntu
+  port: 22
+  keys_only: true
+  # key_data: [ SSH_DEPLOYMENT_PRIVATE_KEY ]
+  keys: [ "config/private.key" ]
+  config: false
 
 # Use a persistent storage volume.
 #

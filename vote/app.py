@@ -29,6 +29,10 @@ def get_redis():
         app.logger.debug("connected to redis")
     return g.redis
 
+@app.route("/healthz", methods=['GET'])
+def healthz():
+    return jsonify({}), 200
+
 @app.route("/", methods=['POST'])
 def vote():
     # Get json payload
