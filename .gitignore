@@ -3,17 +3,25 @@
 
 !.gitignore
 
+# Documentation
+!README.md
+
 # Devcontainer setup
 !.devcontainer/
-!.devcontainer/*
+!.devcontainer/Dockerfile
+!.devcontainer/devcontainer.json
 
 # Deployment files
 !.kamal/
-!.kamal/*
-!.kamal/hooks/
-!.kamal/hooks/*
+!.kamal/secrets
 !config/
-!config/*
+!config/*.yml
+
+# Application
+!vote/
+!vote/Dockerfile
+!vote/*.py
+!vote/requirements.txt
 
 # Terraform
 !terraform/

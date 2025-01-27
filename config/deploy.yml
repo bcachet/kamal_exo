@@ -5,17 +5,20 @@ service: vote
 image: bcachet/votingapp/vote
 
 # Deploy to these servers.
+## Primary role is (by default) the only role using a proxy
+primary_role: vote
 servers:
-  web:
-    - 192.168.0.1
+  vote:
+    - 194.182.161.243
+  db:
+    - 194.182.163.164
 
-# Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
-# Remove this section when using multiple web servers and ensure you terminate SSL at your load balancer.
 proxy:
   ssl: false
-  host: app.example.com
+  # When no hosts are set, all requests are forwarded to container
+  # host: 
   # Proxy connects to your container on port 80 by default.
-  app_port: 80
+  app_port: 5000
 
 # Credentials for your image host.
 registry:
@@ -24,11 +27,13 @@ registry:
 
   # Always use an access token rather than real password (pulled from .kamal/secrets).
   password:
-    - KAMAL_REGISTRY_PASSWORD
+    - GHCR_REGISTRY_PASSWORD
 
 # Configure builder setup.
 builder:
   arch: amd64
+  dockerfile: ../vote/Dockerfile
+  context: ../vote
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #

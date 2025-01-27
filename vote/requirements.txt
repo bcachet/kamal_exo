@@ -1,0 +1,6 @@
+Flask==2.3.2
+flask_cors==3.0.10
+Werkzeug==2.3.3
+gunicorn==21.2.0
+redis==3.5.3
+nats-python==0.8.0
