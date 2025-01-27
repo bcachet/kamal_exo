@@ -14,3 +14,7 @@
 !.kamal/hooks/*
 !config/
 !config/*
+
+# Terraform
+!terraform/
+!terraform/*.tf

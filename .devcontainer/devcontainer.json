@@ -17,7 +17,8 @@
 		"vscode": {
 			"extensions": [
 				"ms-azuretools.vscode-docker",
-				"redhat.vscode-yaml"
+				"redhat.vscode-yaml",
+				"HashiCorp.terraform"
 			]
 		}
 	}
