@@ -1,9 +1,9 @@
-resource "exoscale_security_group" "voting-http" {
-  name = "voting-http"
+resource "exoscale_security_group" "voting" {
+  name = "voting"
 }
 
-resource "exoscale_security_group_rule" "http" {
-  security_group_id = exoscale_security_group.voting-http.id
+resource "exoscale_security_group_rule" "voting-http" {
+  security_group_id = exoscale_security_group.voting.id
   type              = "INGRESS"
   protocol          = "TCP"
   cidr              = "0.0.0.0/0"
@@ -11,8 +11,8 @@ resource "exoscale_security_group_rule" "http" {
   end_port          = 80
 }
 
-resource "exoscale_security_group_rule" "https" {
-  security_group_id = exoscale_security_group.voting-http.id
+resource "exoscale_security_group_rule" "voting-https" {
+  security_group_id = exoscale_security_group.voting.id
   type              = "INGRESS"
   protocol          = "TCP"
   cidr              = "0.0.0.0/0"
@@ -20,12 +20,8 @@ resource "exoscale_security_group_rule" "https" {
   end_port          = 443
 }
 
-resource "exoscale_security_group" "voting-ssh" {
-  name = "voting-ssh"
-}
-
-resource "exoscale_security_group_rule" "ssh" {
-  security_group_id = exoscale_security_group.voting-ssh.id
+resource "exoscale_security_group_rule" "voting-ssh" {
+  security_group_id = exoscale_security_group.voting.id
   type              = "INGRESS"
   protocol          = "TCP"
   cidr              = "0.0.0.0/0"
@@ -33,15 +29,33 @@ resource "exoscale_security_group_rule" "ssh" {
   end_port          = 22
 }
 
-resource "exoscale_security_group" "voting-ping" {
-  name = "voting-ping"
-}
-
-resource "exoscale_security_group_rule" "icmp" {
-  security_group_id = exoscale_security_group.voting-ping.id
+resource "exoscale_security_group_rule" "voting-icmp" {
+  security_group_id = exoscale_security_group.voting.id
   type              = "INGRESS"
   protocol          = "ICMP"
   cidr              = "0.0.0.0/0"
   icmp_code         = 0
   icmp_type         = 8
+}
+
+resource "exoscale_security_group" "redis" {
+  name = "redis"
+}
+
+resource "exoscale_security_group_rule" "redis" {
+  security_group_id      = exoscale_security_group.redis.id
+  type                   = "INGRESS"
+  protocol               = "TCP"
+  user_security_group_id = exoscale_security_group.voting.id
+  start_port             = 6379
+  end_port               = 6379
+}
+
+resource "exoscale_security_group_rule" "redis-ssh" {
+  security_group_id      = exoscale_security_group.redis.id
+  type                   = "INGRESS"
+  protocol               = "TCP"
+  cidr              = "0.0.0.0/0"
+  start_port             = 22
+  end_port               = 22
 }

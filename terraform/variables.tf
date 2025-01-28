@@ -15,3 +15,7 @@ variable "exoscale_secret_key" {
 variable "private_key" {
   default = "your-private-key-PEM-content"
 }
+
+variable "zone" {
+  default = "ch-gva-2"
+}
