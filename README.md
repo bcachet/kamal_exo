@@ -1,6 +1,6 @@
 
 ```shell
-export BITWARDEN_ACCOUNT=<CHANGEME>
+bw login
 # Exoscale IAM key to deploy our infra
 SECRETS=$(bw get item VotingAppDeployment)
 export TF_VAR_exoscale_api_key=$(echo $SECRETS | jq -r '.fields[] | select(.name == "EXO_IAM_KEY").value')

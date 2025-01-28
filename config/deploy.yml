@@ -4,27 +4,37 @@ service: vote
 # Name of the container image.
 image: bcachet/votingapp/vote
 
-# Deploy to these servers.
-## Primary role is (by default) the only role using a proxy
+allow_empty_roles: false
+retain_containers: 2
 primary_role: web
 servers:
   web:
-    - 85.217.161.102
+    hosts: 
+      - 85.217.161.102
+    env:
+      clear:
+        REDIS_URL: redis://194.182.161.194:6379
+        BACKEND: db
+    proxy:
+      ssl: false
+      ## When no hosts are set, all requests are forwarded to container
+      # host: 
+      ## Proxy connects to your container on port 80 by default.
+      app_port: 5000
+      healthcheck:
+        interval: 1
+        path: /healthz
+        timeout: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
   redis:
-    - 85.217.161.72
+    hosts:
+      - 85.217.161.72
+    proxy: false
 
-proxy:
-  ssl: false
-  ## When no hosts are set, all requests are forwarded to container
-  # host: 
-  ## Proxy connects to your container on port 80 by default.
-  app_port: 5000
-  healthcheck:
-    interval: 1
-    path: /healthz
-    timeout: 5
-
-# Credentials for your image host.
+# Container registry configuration
 registry:
   server: ghcr.io
   username: bcachet
@@ -37,26 +47,6 @@ builder:
   dockerfile: ./vote/Dockerfile
   context: ./vote
 
-logging:
-  driver: json-file
-  options:
-    max-size: 100m
-
-# Inject ENV variables into containers (secrets come from .kamal/secrets).
-env:
-  clear:
-    REDIS_URL: redis://194.182.161.194:6379
-    BACKEND: db
-  # secret:
-  #   - RAILS_MASTER_KEY
-
-# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
-# "bin/kamal logs -r job" will tail logs from the first server in the job section.
-#
-# aliases:
-#   shell: app exec --interactive --reuse "bash"
-
-# Use a different ssh user than root
 ssh:
   # key_data: <%= [ ENV["TF_VAR_private_key"] ] %>
   keys:
@@ -66,27 +56,11 @@ ssh:
   keys_only: true
   config: false
 
-# Use a persistent storage volume.
-#
-# volumes:
-#   - "app_storage:/app/storage"
-
-# Bridge fingerprinted assets, like JS and CSS, between versions to avoid
-# hitting 404 on in-flight requests. Combines all files from new and old
-# version inside the asset_path.
-#
-# asset_path: /app/public/assets
-
-# Configure rolling deploys by setting a wait time between batches of restarts.
-#
-# boot:
-#   limit: 10 # Can also specify as a percentage of total hosts, such as "25%"
-#   wait: 2
-
 # Use accessory services (secrets come from .kamal/secrets).
 #
 accessories:
   redis:
+    service: redis
     image: valkey/valkey:8
     roles:
       - redis
@@ -95,3 +69,4 @@ accessories:
       - data:/data
     options:
       restart: always
+    proxy: false
