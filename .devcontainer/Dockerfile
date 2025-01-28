@@ -1,3 +1,4 @@
+FROM ghcr.io/astral-sh/uv:0.5.24 AS uv
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
 ## Setup
@@ -12,7 +13,8 @@ RUN <<EOF
 apt-get install -y --no-install-recommends \
     ruby-full \
     build-essential \
-    terraform
+    terraform \
+    python3
 gem install kamal --version=2.4.0
 EOF
 
@@ -24,4 +26,21 @@ EOF
 ## Cleanup
 RUN rm -rf /var/lib/apt/lists/*
 
+## 
+
+
+ENV VIRTUAL_ENV=/opt/venv
+ENV UV_CACHE_DIR=/opt/uv-cache/
+RUN --mount=type=bind,from=uv,source=/uv,target=/uv \
+    --mount=type=bind,source=./vote/requirements.txt,target=requirements.txt \
+    --mount=type=cache,target=${UV_CACHE_DIR},uid=1000,gid=1000 \
+    <<EOF
+/uv venv --system ${VIRTUAL_ENV}
+/uv pip install -r requirements.txt
+EOF
+
+RUN chown -R vscode:vscode /opt/venv
+
 USER vscode
+
+ENV PATH="${VIRTUAL_ENV}/bin:$PATH"

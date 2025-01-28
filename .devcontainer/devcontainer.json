@@ -3,7 +3,8 @@
 {
 	"name": "kamal_exo",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Dockerfile",
+		"context": "../"
 	},
 	"runArgs": [
 		"--network=host"
