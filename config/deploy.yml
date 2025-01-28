@@ -6,12 +6,12 @@ image: bcachet/votingapp/vote
 
 # Deploy to these servers.
 ## Primary role is (by default) the only role using a proxy
-primary_role: vote
+primary_role: web
 servers:
-  vote:
-    - 194.182.161.194
-  db:
+  web:
     - 159.100.242.73
+  # db:
+  #   - 159.100.242.73
 
 proxy:
   ssl: false
@@ -60,6 +60,7 @@ logging:
 
 # Use a different ssh user than root
 ssh:
+  # key_data: <%= [ ENV["TF_VAR_private_key"] ] %>
   keys:
     - ./config/private_key.pem
   user: ubuntu
