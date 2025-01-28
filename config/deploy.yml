@@ -9,9 +9,9 @@ image: bcachet/votingapp/vote
 primary_role: web
 servers:
   web:
-    - 159.100.242.73
+    - 85.217.161.102
   redis:
-    - 194.182.161.194
+    - 85.217.161.72
 
 proxy:
   ssl: false
