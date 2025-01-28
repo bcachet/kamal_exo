@@ -2,18 +2,13 @@ variable "server_names" {
   default = ["web", "db"]
 }
 
-resource "tls_private_key" "deployment_ssh_key" {
-  algorithm = "ED25519"
+data "tls_public_key" "deployment_ssh_key" {
+  private_key_openssh =  file("../config/private_key.pem")
 }
 
 resource "exoscale_ssh_key" "deployment_ssh_key" {
   name       = "kamal-deployment-ssh-key"
-  public_key = tls_private_key.deployment_ssh_key.public_key_openssh
-}
-
-output "ssh_key" {
-  sensitive = true
-  value     = tls_private_key.deployment_ssh_key.private_key_openssh
+  public_key = data.tls_public_key.deployment_ssh_key.public_key_openssh
 }
 
 data "exoscale_template" "ubuntu_template" {
@@ -84,20 +79,20 @@ resource "exoscale_compute_instance" "small-instance" {
     exoscale_security_group.voting-ping.id]
 }
 
-resource "exoscale_domain" "deployment_domain" {
-  name = "kamal-playground.ch"
-}
+# resource "exoscale_domain" "deployment_domain" {
+#   name = "kamal-playground.ch"
+# }
 
-resource "exoscale_domain_record" "web" {
-  domain      = exoscale_domain.deployment_domain.id
-  name        = "web"
-  record_type = "A"
-  content     = exoscale_compute_instance.small-instance["web"].public_ip_address
-}
+# resource "exoscale_domain_record" "web" {
+#   domain      = exoscale_domain.deployment_domain.id
+#   name        = "web"
+#   record_type = "A"
+#   content     = exoscale_compute_instance.small-instance["web"].public_ip_address
+# }
 
-resource "exoscale_domain_record" "alias" {
-  domain      = exoscale_domain.deployment_domain.id
-  name        = "voting"
-  record_type = "CNAME"
-  content     = exoscale_domain_record.web.hostname
-}
+# resource "exoscale_domain_record" "alias" {
+#   domain      = exoscale_domain.deployment_domain.id
+#   name        = "voting"
+#   record_type = "CNAME"
+#   content     = exoscale_domain_record.web.hostname
+# }

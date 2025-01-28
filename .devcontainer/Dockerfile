@@ -16,6 +16,11 @@ apt-get install -y --no-install-recommends \
 gem install kamal --version=2.4.0
 EOF
 
+ADD https://vault.bitwarden.com/download/?app=cli&platform=linux /tmp/bw.zip
+RUN <<EOF
+unzip /tmp/bw.zip -d /usr/local/bin
+EOF
+
 ## Cleanup
 RUN rm -rf /var/lib/apt/lists/*
 
