@@ -61,7 +61,9 @@ def vote():
         # Persist vote in redis
         r = get_redis()
         data = json.dumps({'voter_id': voter_id, 'vote': vote})
+        app.logger.info('Storing data %s to Redis', data)
         r.rpush('votes', data)
+        app.logger.info('Data stored to Redis')
         return jsonify({"hostname": hostname, "voter_id": voter_id}), 200
 
     elif backend == 'nats':

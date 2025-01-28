@@ -13,7 +13,7 @@ servers:
       - 85.217.161.102
     env:
       clear:
-        REDIS_URL: redis://194.182.161.194:6379
+        REDIS_URL: redis://85.217.161.72:6379
         BACKEND: db
     proxy:
       ssl: false
@@ -29,10 +29,6 @@ servers:
       driver: json-file
       options:
         max-size: 100m
-  redis:
-    hosts:
-      - 85.217.161.72
-    proxy: false
 
 # Container registry configuration
 registry:
@@ -62,8 +58,8 @@ accessories:
   redis:
     service: redis
     image: valkey/valkey:8
-    roles:
-      - redis
+    hosts:
+      - 85.217.161.72
     port: 6379
     directories:
       - data:/data
