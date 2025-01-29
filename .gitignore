@@ -19,13 +19,24 @@
 !config/
 !config/*.yml
 
-# Application
+# Applications
 !vote/
 !vote/Dockerfile
 !vote/*.py
 !vote/requirements.txt
-!vote/config/
-!vote/config/*.yml
+
+!vote-ui/
+!vote-ui/Dockerfile
+!vote-ui/content/
+!vote-ui/content/*.js
+!vote-ui/content/*.css
+!vote-ui/images/
+!vote-ui/images/*.png
+!vote-ui/*.html
+!vote-ui/*.js
+!vote-ui/*.conf
+!vote-ui/*.conf.tmpl
+!vote-ui/*.ico
 
 # Terraform
 !terraform/
