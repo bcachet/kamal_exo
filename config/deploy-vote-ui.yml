@@ -13,19 +13,20 @@ primary_role: ui
 servers:
   ui:
     hosts: <%= ENV.fetch('WEB_SERVERS').split(' ') %>
+    options:
+      network: kamal
     env:
       clear:
-        VOTE_URL: http://127.0.0.1:5000/
+        VOTE_URL: http://vote:5000/
     # Configure kamal-proxy to route traffic to our service/container
     proxy:
       ssl: false
       ## When no hosts are set, all requests are forwarded to container
       # host: nil
-      ## Proxy connects to your container on port 80 by default.
       app_port: 80
       healthcheck:
         interval: 1
-        path: /
+        path: /healthz
         timeout: 5
     logging:
       driver: json-file

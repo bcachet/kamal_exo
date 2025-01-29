@@ -13,6 +13,9 @@ primary_role: vote
 servers:
   vote:
     hosts: <%= ENV.fetch('WEB_SERVERS').split(' ') %>
+    options:
+      publish: "5000:5000"
+      network: kamal
     env:
       clear:
         REDIS_URL: "redis://<%= ENV.fetch('REDIS_SERVER') %>:6379"
