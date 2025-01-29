@@ -1,0 +1,6 @@
+# Container registry configuration
+registry:
+  server: ghcr.io
+  username: bcachet
+  password:
+    - GHCR_REGISTRY_PASSWORD

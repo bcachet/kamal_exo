@@ -15,6 +15,10 @@ kamal setup
 
 Validate that vote application work:
 ```shell
-$ curl -X POST -H "Content-Type: application/json" -d '{"vote": "foo"}' http://159.100.242.73:80
+source .env
+$ curl -X POST -H "Content-Type: application/json" -d '{"vote": "foo"}' http://$WEB_SERVERS
+```
+Should return something like
+```json
 {"hostname":"159.100.242.73-19bc3792a704","voter_id":"910797520b4cd4"}
 ```

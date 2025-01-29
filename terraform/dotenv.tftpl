@@ -1,0 +1,3 @@
+REDIS_SERVER="${redis_instance.public_ip_address}"
+WEB_SERVERS="%{ for instance in web_instances ~}${instance.public_ip_address} %{ endfor ~}"
+PRIVATE_SSH_KEY="${ssh_key.private_key_pem}"

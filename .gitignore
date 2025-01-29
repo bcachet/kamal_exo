@@ -28,3 +28,4 @@
 # Terraform
 !terraform/
 !terraform/*.tf
+!terraform/*.tftpl

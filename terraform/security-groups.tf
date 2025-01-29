@@ -1,9 +1,9 @@
-resource "exoscale_security_group" "voting" {
-  name = "voting"
+resource "exoscale_security_group" "web" {
+  name = "web"
 }
 
-resource "exoscale_security_group_rule" "voting-http" {
-  security_group_id = exoscale_security_group.voting.id
+resource "exoscale_security_group_rule" "web-http" {
+  security_group_id = exoscale_security_group.web.id
   type              = "INGRESS"
   protocol          = "TCP"
   cidr              = "0.0.0.0/0"
@@ -11,8 +11,8 @@ resource "exoscale_security_group_rule" "voting-http" {
   end_port          = 80
 }
 
-resource "exoscale_security_group_rule" "voting-https" {
-  security_group_id = exoscale_security_group.voting.id
+resource "exoscale_security_group_rule" "web-https" {
+  security_group_id = exoscale_security_group.web.id
   type              = "INGRESS"
   protocol          = "TCP"
   cidr              = "0.0.0.0/0"
@@ -20,8 +20,8 @@ resource "exoscale_security_group_rule" "voting-https" {
   end_port          = 443
 }
 
-resource "exoscale_security_group_rule" "voting-ssh" {
-  security_group_id = exoscale_security_group.voting.id
+resource "exoscale_security_group_rule" "web-ssh" {
+  security_group_id = exoscale_security_group.web.id
   type              = "INGRESS"
   protocol          = "TCP"
   cidr              = "0.0.0.0/0"
@@ -29,8 +29,8 @@ resource "exoscale_security_group_rule" "voting-ssh" {
   end_port          = 22
 }
 
-resource "exoscale_security_group_rule" "voting-icmp" {
-  security_group_id = exoscale_security_group.voting.id
+resource "exoscale_security_group_rule" "web-icmp" {
+  security_group_id = exoscale_security_group.web.id
   type              = "INGRESS"
   protocol          = "ICMP"
   cidr              = "0.0.0.0/0"
@@ -46,7 +46,7 @@ resource "exoscale_security_group_rule" "redis" {
   security_group_id      = exoscale_security_group.redis.id
   type                   = "INGRESS"
   protocol               = "TCP"
-  user_security_group_id = exoscale_security_group.voting.id
+  user_security_group_id = exoscale_security_group.web.id
   start_port             = 6379
   end_port               = 6379
 }

@@ -20,7 +20,8 @@
 				"ms-azuretools.vscode-docker",
 				"redhat.vscode-yaml",
 				"HashiCorp.terraform",
-				"ms-python.python"
+				"ms-python.python",
+				"Shopify.ruby-extensions-pack"
 			]
 		}
 	}

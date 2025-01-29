@@ -1,3 +1,5 @@
+<% require "dotenv"; Dotenv.load(".env") %>
+
 # Name of your application. Used to uniquely configure containers.
 service: vote
 
@@ -9,11 +11,10 @@ retain_containers: 2
 primary_role: web
 servers:
   web:
-    hosts: 
-      - 85.217.161.102
+    hosts: <%= ENV.fetch('WEB_SERVERS').split(' ') %>
     env:
       clear:
-        REDIS_URL: redis://85.217.161.72:6379
+        REDIS_URL: "redis://<%= ENV.fetch('REDIS_SERVER') %>:6379"
         BACKEND: db
     proxy:
       ssl: false
@@ -30,27 +31,11 @@ servers:
       options:
         max-size: 100m
 
-# Container registry configuration
-registry:
-  server: ghcr.io
-  username: bcachet
-  password:
-    - GHCR_REGISTRY_PASSWORD
-
 # Configure builder setup.
 builder:
   arch: amd64
   dockerfile: ./vote/Dockerfile
   context: ./vote
-
-ssh:
-  # key_data: <%= [ ENV["TF_VAR_private_key"] ] %>
-  keys:
-    - ./config/private_key.pem
-  user: ubuntu
-  port: 22
-  keys_only: true
-  config: false
 
 # Use accessory services (secrets come from .kamal/secrets).
 #
@@ -58,11 +43,19 @@ accessories:
   redis:
     service: redis
     image: valkey/valkey:8
-    hosts:
-      - 85.217.161.72
+    hosts: <%= [ ENV.fetch('REDIS_SERVER') ] %>
     port: 6379
     directories:
       - data:/data
     options:
       restart: always
     proxy: false
+
+<%
+template = File.read('config/ssh.yml')
+ssh = ERB.new(template)
+%>
+
+<%= ssh.result %>
+
+<%= File.read("config/registry.yml") %>
