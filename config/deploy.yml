@@ -1,13 +1,17 @@
+# deployment files are ERB files
 <% require "dotenv"; Dotenv.load(".env") %>
 
-# Name of your application. Used to uniquely configure containers.
+# Name of your application
+# Used to uniquely configure containers.
 service: vote
 
-# Name of the container image.
+# Name of the container image under which it will be pushed/pulled to/from registry
 image: bcachet/votingapp/vote
 
-allow_empty_roles: false
-retain_containers: 2
+# Registry configuration come from external file to be shared accross all deployments
+<%= File.read("config/registry.yml") %>
+
+# Define role to be 
 primary_role: web
 servers:
   web:
@@ -16,10 +20,11 @@ servers:
       clear:
         REDIS_URL: "redis://<%= ENV.fetch('REDIS_SERVER') %>:6379"
         BACKEND: db
+    # Configure kamal-proxy to route traffic to our service/container
     proxy:
       ssl: false
       ## When no hosts are set, all requests are forwarded to container
-      # host: 
+      host: nil
       ## Proxy connects to your container on port 80 by default.
       app_port: 5000
       healthcheck:
@@ -37,8 +42,7 @@ builder:
   dockerfile: ./vote/Dockerfile
   context: ./vote
 
-# Use accessory services (secrets come from .kamal/secrets).
-#
+# Accessories are dependencies of our service
 accessories:
   redis:
     service: redis
@@ -51,11 +55,10 @@ accessories:
       restart: always
     proxy: false
 
+# SSH configuration comes from external file to be shared amongst deployment
 <%
 template = File.read('config/ssh.yml')
 ssh = ERB.new(template)
 %>
 
 <%= ssh.result %>
-
-<%= File.read("config/registry.yml") %>
