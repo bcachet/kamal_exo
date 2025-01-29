@@ -3,29 +3,25 @@
 
 # Name of your application
 # Used to uniquely configure containers.
-service: vote
+service: vote-ui
 
 # Name of the container image under which it will be pushed/pulled to/from registry
-image: bcachet/votingapp/vote
+image: bcachet/votingapp/vote-ui
 
 # Define role to be 
-primary_role: vote
+primary_role: ui
 servers:
-  vote:
+  ui:
     hosts: <%= ENV.fetch('WEB_SERVERS').split(' ') %>
-    env:
-      clear:
-        REDIS_URL: "redis://<%= ENV.fetch('REDIS_SERVER') %>:6379"
-        BACKEND: db
     # Configure kamal-proxy to route traffic to our service/container
     proxy:
       ssl: false
       ## When no hosts are set, all requests are forwarded to container
-      host: vote
-      app_port: 5000
+      # host: nil
+      app_port: 80
       healthcheck:
         interval: 1
-        path: /healthz
+        path: /
         timeout: 5
     logging:
       driver: json-file
@@ -35,28 +31,17 @@ servers:
 # Configure builder setup.
 builder:
   arch: amd64
-  dockerfile: ./vote/Dockerfile
-  context: ./vote/
-
-# Accessories are dependencies of our service
-accessories:
-  redis:
-    service: redis
-    image: valkey/valkey:8
-    hosts: <%= [ ENV.fetch('REDIS_SERVER') ] %>
-    port: 6379
-    directories:
-      - data:/data
-    options:
-      restart: always
-    proxy: false
+  dockerfile: Dockerfile
+  context: .
 
 # SSH configuration comes from external file to be shared amongst deployment
 <%
-template = File.read('./config/ssh.yml')
+template = File.read('../kamal/ssh.yml')
 ssh = ERB.new(template)
 %>
 <%= ssh.result %>
 
 # Registry configuration come from external file to be shared accross all deployments
-<%= File.read('./config/registry.yml') %>
+<%= File.read('../kamal/registry.yml') %>
+
+hooks_path: ../kamal/hooks
