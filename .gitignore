@@ -12,19 +12,23 @@
 !.devcontainer/devcontainer.json
 
 # Deployment files
-!.kamal/
-!.kamal/secrets
-!.kamal/hooks/
-!.kamal/hooks/docker-setup
-!config/
-!config/*.yml
+!kamal/
+!kamal/hooks/
+!kamal/hooks/docker-setup
+
 
 # Applications
+## vote backend
 !vote/
 !vote/Dockerfile
 !vote/*.py
 !vote/requirements.txt
+!vote-ui/.kamal/
+!vote-ui/.kamal/secrets
+!vote-ui/config/
+!vote-ui/config/*.yml
 
+## vote ui
 !vote-ui/
 !vote-ui/Dockerfile
 !vote-ui/content/
@@ -37,6 +41,10 @@
 !vote-ui/*.conf
 !vote-ui/*.conf.tmpl
 !vote-ui/*.ico
+!vote-ui/.kamal/
+!vote-ui/.kamal/secrets
+!vote-ui/config/
+!vote-ui/config/*.yml
 
 # Terraform
 !terraform/

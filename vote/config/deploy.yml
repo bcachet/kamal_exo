@@ -1,5 +1,5 @@
 # deployment files are ERB files
-<% require "dotenv"; Dotenv.load(".env") %>
+<% require "dotenv"; Dotenv.load("../.env") %>
 
 # Name of your application
 # Used to uniquely configure containers.
@@ -59,6 +59,10 @@ ssh = ERB.new(template)
 <%= ssh.result %>
 
 # Registry configuration come from external file to be shared accross all deployments
-<%= File.read('../kamal/registry.yml') %>
+<%
+template = File.read('../kamal/registry.yml')
+reg = ERB.new(template)
+%>
+<%= reg.result %>
 
 hooks_path: ../kamal/hooks
