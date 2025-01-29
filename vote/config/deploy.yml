@@ -1,5 +1,5 @@
 # deployment files are ERB files
-<% require "dotenv"; Dotenv.load(".env") %>
+<% require "dotenv"; Dotenv.load("../.env") %>
 
 # Name of your application
 # Used to uniquely configure containers.
@@ -7,9 +7,6 @@ service: vote
 
 # Name of the container image under which it will be pushed/pulled to/from registry
 image: bcachet/votingapp/vote
-
-# Registry configuration come from external file to be shared accross all deployments
-<%= File.read("config/registry.yml") %>
 
 # Define role to be 
 primary_role: web
@@ -39,8 +36,8 @@ servers:
 # Configure builder setup.
 builder:
   arch: amd64
-  dockerfile: ./vote/Dockerfile
-  context: ./vote
+  dockerfile: ./Dockerfile
+  context: ./
 
 # Accessories are dependencies of our service
 accessories:
@@ -57,8 +54,14 @@ accessories:
 
 # SSH configuration comes from external file to be shared amongst deployment
 <%
-template = File.read('config/ssh.yml')
+template = File.read('../config/ssh.yml')
 ssh = ERB.new(template)
 %>
-
 <%= ssh.result %>
+
+# Registry configuration come from external file to be shared accross all deployments
+<%
+template = File.read('../config/registry.yml')
+reg = ERB.new(template)
+%>
+<%= reg.result %>

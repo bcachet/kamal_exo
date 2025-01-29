@@ -6,11 +6,12 @@ SECRETS=$(bw get item VotingAppDeployment)
 export TF_VAR_exoscale_api_key=$(echo $SECRETS | jq -r '.fields[] | select(.name == "EXO_IAM_KEY").value')
 export TF_VAR_exoscale_secret_key=$(echo $SECRETS | jq -r '.fields[] | select(.name == "EXO_IAM_SECRET").value')
 # Token to access ghcr.io registry
-export GHCRIO=$(bw get password GHCRIO)
+export TF_VAR_ghcrio_token=$(bw get password GHCRIO)
 (cd terraform && \
     terraform init && \
     terraform plan)
-kamal setup
+(cd vote && kamal setup)
+(cd vote-ui && kamal setup)
 ```
 
 Validate that vote application work:

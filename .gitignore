@@ -24,6 +24,8 @@
 !vote/Dockerfile
 !vote/*.py
 !vote/requirements.txt
+!vote/config/
+!vote/config/*.yml
 
 # Terraform
 !terraform/
