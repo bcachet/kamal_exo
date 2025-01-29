@@ -24,7 +24,7 @@ servers:
     proxy:
       ssl: false
       ## When no hosts are set, all requests are forwarded to container
-      host: nil
+      # host: nil
       ## Proxy connects to your container on port 80 by default.
       app_port: 5000
       healthcheck:
