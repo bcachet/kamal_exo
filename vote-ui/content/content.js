@@ -209,7 +209,7 @@ export default {
       console.log("SELECTION DONE");
       current_vote.value = vote;
 
-      fetch('/api', {
+      fetch('/api/', {
         method: 'post',
         headers: {
           'Accept': 'application/json',

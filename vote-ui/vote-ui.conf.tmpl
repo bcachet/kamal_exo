@@ -4,6 +4,12 @@ server {
     root /usr/share/nginx/html;
 
     location /api {
-        proxy_pass ${VOTE_URL};
+
+        proxy_set_header Host vote;
+        proxy_pass http://kamal-proxy:80/;
+    }
+
+    location /healthz/ {
+        return 200 'OK!';
     }
 }

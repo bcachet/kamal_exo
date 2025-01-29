@@ -28,7 +28,7 @@ resource "exoscale_nlb_service" "web-nlb-service" {
   healthcheck {
     mode     = "http"
     port     = 80
-    uri      = "/"
+    uri      = "/healthz"
     interval = 5
     timeout  = 3
     retries  = 1
