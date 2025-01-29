@@ -6,5 +6,5 @@ ssh-add - <<< $PRIVATE_SSH_KEY
 
 USER=ubuntu
 for HOST in ${KAMAL_HOSTS//,/ }; do    
-    ssh $USER@$HOST sudo usermod -aG docker $USER
+    ssh $USER@$HOST "sudo usermod -aG docker $USER && exit"
 done

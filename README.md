@@ -10,8 +10,10 @@ export TF_VAR_ghcrio_token=$(bw get password GHCRIO)
 (cd terraform && \
     terraform init && \
     terraform plan)
-(cd vote && kamal setup)
-(cd vote-ui && kamal setup)
+source .env
+kamal setup --config-file ./config/deploy-vote.yml
+kamal deploy --config-file ./config/deploy-vote.yml
+kamal deploy --config-file ./config/deploy-vote-ui.yml
 ```
 
 Validate that vote application work:
