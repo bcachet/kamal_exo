@@ -16,7 +16,7 @@ kamal setup
 Validate that vote application work:
 ```shell
 source .env
-$ curl -X POST -H "Content-Type: application/json" -d '{"vote": "foo"}' http://$WEB_SERVERS
+$ curl -X POST -H "Content-Type: application/json" -d '{"vote": "foo"}' http://$WEB_NLB
 ```
 Should return something like
 ```json
