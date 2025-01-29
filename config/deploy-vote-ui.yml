@@ -9,9 +9,9 @@ service: vote-ui
 image: bcachet/votingapp/vote-ui
 
 # Define role to be 
-primary_role: web
+primary_role: ui
 servers:
-  web:
+  ui:
     hosts: <%= ENV.fetch('WEB_SERVERS').split(' ') %>
     env:
       clear:

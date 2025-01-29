@@ -2,8 +2,9 @@
 
 
 echo "Docker set up on $KAMAL_HOSTS..."
+ssh-add - <<< $PRIVATE_SSH_KEY
 
 USER=ubuntu
-for HOST in ${KAMAL_HOSTS//,/ }; do
-    ssh -i config/private_key.pem $USER@$HOST sudo usermod -aG docker $USER
+for HOST in ${KAMAL_HOSTS//,/ }; do    
+    ssh $USER@$HOST sudo usermod -aG docker $USER
 done
