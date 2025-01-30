@@ -1,3 +1,0 @@
-#!/bin/bash
-
-kamal server exec "sudo usermod -aG docker ubuntu && sleep 2 && exit"

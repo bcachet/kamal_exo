@@ -14,7 +14,8 @@
 # Deployment files
 !kamal/
 !kamal/hooks/
-!kamal/hooks/docker-setup
+!kamal/hooks/*
+!kamal/*.yml
 
 
 # Applications
