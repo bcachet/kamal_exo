@@ -52,6 +52,8 @@
 !worker/src/
 !worker/src/go.*
 !worker/src/*.go
+!worker/config/
+!worker/config/*.yml
 
 # Terraform
 !terraform/

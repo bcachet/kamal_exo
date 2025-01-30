@@ -1,0 +1,67 @@
+# deployment files are ERB files
+<% require "dotenv"; Dotenv.load("../.env") %>
+
+# Name of your application
+# Used to uniquely configure containers.
+service: worker
+
+# Name of the container image under which it will be pushed/pulled to/from registry
+image: bcachet/votingapp/worker
+
+# Define role to be 
+primary_role: db
+servers:
+  db:
+    hosts: <%= [ ENV.fetch('DB_SERVER') ] %>
+    env:
+      clear:
+        REDIS_URL: "redis://<%= ENV.fetch('DB_SERVER') %>:6379"
+    # Configure kamal-proxy to route traffic to our service/container
+    proxy:
+      ssl: false
+      ## When no hosts are set, all requests are forwarded to container
+      host: worker
+      app_port: 5000
+      healthcheck:
+        interval: 1
+        path: /healthz
+        timeout: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+
+# Configure builder setup.
+builder:
+  arch: amd64
+  dockerfile: Dockerfile
+  context: .
+
+# Accessories are dependencies of our service
+accessories:
+  redis:
+    service: redis
+    image: valkey/valkey:8
+    hosts: <%= [ ENV.fetch('DB_SERVER') ] %>
+    port: 6379
+    directories:
+      - data:/data
+    options:
+      restart: always
+    proxy: false
+
+# SSH configuration comes from external file to be shared amongst deployment
+<%
+template = File.read('../kamal/ssh.yml')
+ssh = ERB.new(template)
+%>
+<%= ssh.result %>
+
+# Registry configuration come from external file to be shared accross all deployments
+<%
+template = File.read('../kamal/registry.yml')
+reg = ERB.new(template)
+%>
+<%= reg.result %>
+
+hooks_path: ../kamal/hooks

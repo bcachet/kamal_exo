@@ -38,6 +38,7 @@ Creating the infrastructure
 ### Deploying our applications with Kamal
 Once our infrastructure is in place and our `.env` file has been populated by Terraform with IPs of our differents instances, we can deploy our application using Kamal
 ```shell
+source .env # to load generated SSH key
 (cd vote && kamal setup)
 (cd vote && kamal deploy)
 (cd vote-ui && kamal deploy)
