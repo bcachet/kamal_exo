@@ -14,10 +14,12 @@ apt-get install -y --no-install-recommends \
     ruby-full \
     build-essential \
     terraform \
-    python3
+    python3 \
+    golang
 gem install kamal --version=2.4.0
 EOF
 
+## Bitwarden to access secrets
 ADD https://vault.bitwarden.com/download/?app=cli&platform=linux /tmp/bw.zip
 RUN <<EOF
 unzip /tmp/bw.zip -d /usr/local/bin
@@ -26,9 +28,7 @@ EOF
 ## Cleanup
 RUN rm -rf /var/lib/apt/lists/*
 
-## 
-
-
+## Python environment for vote app (Flask)
 ENV VIRTUAL_ENV=/opt/venv
 ENV UV_CACHE_DIR=/opt/uv-cache/
 RUN --mount=type=bind,from=uv,source=/uv,target=/uv \
@@ -42,5 +42,10 @@ EOF
 RUN chown -R vscode:vscode /opt/venv
 
 USER vscode
+
+## Golang environment for worker app
+RUN --mount=type=bind,source=./worker/src/go.sum,target=go.sum \
+    --mount=type=bind,source=./worker/src/go.mod,target=go.mod \
+    go mod download
 
 ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
