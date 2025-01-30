@@ -7,7 +7,6 @@ resource "exoscale_instance_pool" "web-ipool" {
   disk_size          = 10
   key_pair           = exoscale_ssh_key.deployment_ssh_key.name
   security_group_ids = [exoscale_security_group.web.id]
-  user_data          = file("./cloud-init.yml")
 }
 
 resource "exoscale_nlb" "web-nlb" {
