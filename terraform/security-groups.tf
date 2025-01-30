@@ -38,12 +38,12 @@ resource "exoscale_security_group_rule" "web-icmp" {
   icmp_type         = 8
 }
 
-resource "exoscale_security_group" "redis" {
-  name = "redis"
+resource "exoscale_security_group" "db" {
+  name = "db"
 }
 
-resource "exoscale_security_group_rule" "redis" {
-  security_group_id      = exoscale_security_group.redis.id
+resource "exoscale_security_group_rule" "db-redis" {
+  security_group_id      = exoscale_security_group.db.id
   type                   = "INGRESS"
   protocol               = "TCP"
   user_security_group_id = exoscale_security_group.web.id
@@ -51,11 +51,11 @@ resource "exoscale_security_group_rule" "redis" {
   end_port               = 6379
 }
 
-resource "exoscale_security_group_rule" "redis-ssh" {
-  security_group_id      = exoscale_security_group.redis.id
-  type                   = "INGRESS"
-  protocol               = "TCP"
+resource "exoscale_security_group_rule" "db-ssh" {
+  security_group_id = exoscale_security_group.db.id
+  type              = "INGRESS"
+  protocol          = "TCP"
   cidr              = "0.0.0.0/0"
-  start_port             = 22
-  end_port               = 22
+  start_port        = 22
+  end_port          = 22
 }

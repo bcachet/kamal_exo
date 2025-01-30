@@ -46,6 +46,13 @@
 !vote-ui/config/
 !vote-ui/config/*.yml
 
+## worker
+!worker/
+!worker/Dockerfile
+!worker/src/
+!worker/src/go.*
+!worker/src/*.go
+
 # Terraform
 !terraform/
 !terraform/*.tf

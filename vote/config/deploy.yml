@@ -15,7 +15,7 @@ servers:
     hosts: <%= ENV.fetch('WEB_SERVERS').split(' ') %>
     env:
       clear:
-        REDIS_URL: "redis://<%= ENV.fetch('REDIS_SERVER') %>:6379"
+        REDIS_URL: "redis://<%= ENV.fetch('DB_SERVER') %>:6379"
         BACKEND: db
     # Configure kamal-proxy to route traffic to our service/container
     proxy:
@@ -43,7 +43,7 @@ accessories:
   redis:
     service: redis
     image: valkey/valkey:8
-    hosts: <%= [ ENV.fetch('REDIS_SERVER') ] %>
+    hosts: <%= [ ENV.fetch('DB_SERVER') ] %>
     port: 6379
     directories:
       - data:/data
