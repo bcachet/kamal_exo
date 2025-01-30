@@ -31,7 +31,7 @@ Creating the infrastructure
 ```shell
 (cd terraform && \
     terraform init && \
-    terraform plan)
+    terraform apply)
 ```
 
 
