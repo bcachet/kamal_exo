@@ -42,6 +42,7 @@ source .env # to load generated SSH key
 (cd vote && kamal setup)
 (cd vote && kamal deploy)
 (cd vote-ui && kamal deploy)
+(cd worker && kamal deploy)
 ```
 
 ### Validation of our setup
