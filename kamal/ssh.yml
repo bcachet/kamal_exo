@@ -1,5 +1,6 @@
 ssh:
-  key_data: <%= [ ENV.fetch('PRIVATE_SSH_KEY') ] %>
+  keys: ['../config/private_key.pem']
   user: ubuntu
   port: 22
+  keys_only: true
   config: false

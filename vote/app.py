@@ -18,8 +18,6 @@ redis_url = os.getenv('REDIS_URL','redis://redis:6379')
 app = Flask(__name__)
 CORS(app)
 
-gunicorn_error_logger = logging.getLogger('gunicorn.error')
-app.logger.handlers.extend(gunicorn_error_logger.handlers)
 app.logger.setLevel(logging.INFO)
 
 def get_redis():

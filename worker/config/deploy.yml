@@ -42,11 +42,7 @@ accessories:
     proxy: false
 
 # SSH configuration comes from external file to be shared amongst deployment
-<%
-template = File.read('../kamal/ssh.yml')
-ssh = ERB.new(template)
-%>
-<%= ssh.result %>
+<%= File.read('../kamal/ssh.yml') %>
 
 # Registry configuration come from external file to be shared accross all deployments
 <%
