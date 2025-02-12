@@ -36,6 +36,7 @@ def healthz():
 @app.route("/", methods=['POST'])
 def vote():
     # Get json payload
+    app.logger.info('Received a vote request')
     payload = request.get_json()
 
     # Make sure vote and voter_id are provider
