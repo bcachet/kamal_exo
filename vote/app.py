@@ -18,7 +18,7 @@ redis_url = os.getenv('REDIS_URL','redis://redis:6379')
 app = Flask(__name__)
 CORS(app)
 
-app.logger.setLevel(logging.INFO)
+app.logger.setLevel(logging.DEBUG)
 
 def get_redis():
     if not hasattr(g, 'redis'):
@@ -34,7 +34,7 @@ def healthz():
 @app.route("/", methods=['POST'])
 def vote():
     # Get json payload
-    app.logger.info('Received a vote request')
+    app.logger.debug('Received a vote request')
     payload = request.get_json()
 
     # Make sure vote and voter_id are provider
@@ -53,16 +53,16 @@ def vote():
     # Use provided backend (among 'db' or 'nats')
     # Note: default to 'db' backend
     backend = os.getenv('BACKEND','db')
-    app.logger.info('backend is %s', backend)
+    app.logger.debug('backend is %s', backend)
 
     # Select backend
     if backend == 'db':
         # Persist vote in redis
         r = get_redis()
         data = json.dumps({'voter_id': voter_id, 'vote': vote})
-        app.logger.info('Storing data %s to Redis', data)
+        app.logger.debug('Storing data %s to Redis', data)
         r.rpush('votes', data)
-        app.logger.info('Data stored to Redis')
+        app.logger.debug('Data stored to Redis')
         return jsonify({"hostname": hostname, "voter_id": voter_id}), 200
 
     elif backend == 'nats':
@@ -71,10 +71,10 @@ def vote():
         data = json.dumps({"vote": vote, "voter_id": voter_id})
         try:
             with NATSClient(NATS_URL, socket_timeout=2) as client:
-                app.logger.info("connected to nats")
+                app.logger.debug("connected to nats")
                 client.publish("vote", payload=json.dumps(data).encode())
         except Exception as e:
-            app.logger.info(e)
+            app.logger.warn(e)
             return jsonify({"error": "cannot publish payload {} to NATS".format(data)}), 400
         return jsonify({"hostname": hostname, "voter_id": voter_id, "backend": "NATS"}), 200
     

@@ -83,7 +83,6 @@ Which should return some HTML content about Cats/Dogs
 
 `kamal rollback <VERSION>` to rollback application to a given version
 
-`kamal prune all` to remove unused images/containers
 
 ### Servers handling
 
