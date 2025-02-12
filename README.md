@@ -1,8 +1,9 @@
 ## Deploy application on Exoscale with Kamal
 
-Objective is to deploy a _vote_ application written in Python (relying on a Redis DB) and _vote-ui_ application written in JS (and serve by NGinx) onto Exoscale cloud provider using:
-* [Terraform](https://terraform.io) to create our infrastructure
-* [Kamal](https://kamal-deploy.org) to deploy our applications
+Objective is to deploy a _vote_ application written in Python (relying on a Redis DB) and _vote-ui_ application written in JS (and serve by NGinx) onto Exoscale cloud provider using [Kamal](https://kamal-deploy.org).
+
+> [!NOTE]
+> We will create our infrastructure on Exoscale using [Terraform](https://terraform.io) 
 
 ### Gathering credentials
 
@@ -11,7 +12,7 @@ Objective is to deploy a _vote_ application written in Python (relying on a Redi
 > Once created you will need IAM keys that you can found on https://portal.exoscale.com/u/<YOUR_ACCOUNT_NAME>/iam/keys
 
 > [!NOTE]
-> You also need a Github Personal Access Token to be able to Push/Pull to ghcr.io
+> You also need a Github Personal Access Token to be able to Push/Pull to/from ghcr.io
 > You can create one from https://github.com/settings/tokens
 
 Once you have Exoscale IAM keys and Github Personal Access Token you can create environment variables that we will use against Terraform to create our infrastructure.
@@ -75,6 +76,10 @@ Which should return some HTML content about Cats/Dogs
 `kamal app logs` will show logs our application
 
 `kamal app exec <COMMAND>` will allow to execute a command inside the application container
+
+### Maintenance
+
+`kamal app containers` to retrieve the version we want to rollback to
 
 `kamal rollback <VERSION>` to rollback application to a given version
 
