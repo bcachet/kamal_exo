@@ -11,6 +11,7 @@ EOF
 ## Kamal environment
 RUN <<EOF
 apt-get install -y --no-install-recommends \
+    curl \
     ruby-full \
     build-essential \
     terraform \
@@ -20,8 +21,9 @@ gem install kamal --version=2.4.0
 EOF
 
 ## Bitwarden to access secrets
-ADD https://vault.bitwarden.com/download/?app=cli&platform=linux /tmp/bw.zip
 RUN <<EOF
+set -e
+curl -L -o /tmp/bw.zip "https://vault.bitwarden.com/download/?app=cli&platform=linux"
 unzip /tmp/bw.zip -d /usr/local/bin
 EOF
 
@@ -32,11 +34,12 @@ RUN rm -rf /var/lib/apt/lists/*
 ENV VIRTUAL_ENV=/opt/venv
 ENV UV_CACHE_DIR=/opt/uv-cache/
 RUN --mount=type=bind,from=uv,source=/uv,target=/uv \
-    --mount=type=bind,source=./vote/requirements.txt,target=requirements.txt \
+    --mount=type=bind,source=vote/requirements.txt,target=/tmp/requirements.txt,ro \
     --mount=type=cache,target=${UV_CACHE_DIR},uid=1000,gid=1000 \
     <<EOF
+ls -l /tmp/
 /uv venv --system ${VIRTUAL_ENV}
-/uv pip install -r requirements.txt
+/uv pip install -r /tmp/requirements.txt
 EOF
 
 RUN chown -R vscode:vscode /opt/venv
@@ -44,8 +47,8 @@ RUN chown -R vscode:vscode /opt/venv
 USER vscode
 
 ## Golang environment for worker app
-RUN --mount=type=bind,source=./worker/src/go.sum,target=go.sum \
-    --mount=type=bind,source=./worker/src/go.mod,target=go.mod \
+RUN --mount=type=bind,source=./worker/src/go.sum,target=go.sum,ro \
+    --mount=type=bind,source=./worker/src/go.mod,target=go.mod,ro \
     go mod download
 
 ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
